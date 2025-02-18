@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react(), svgr()],
   assetsInclude: ['**/*.jpg'],
   server: {
-    port: 3008,
+    port: 3002,
   },
   resolve: {
     alias: {

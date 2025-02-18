@@ -1,18 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { styled } from 'styled-components'
 import { Header } from '../components/header'
 import { Back, SigninImg } from '../assets'
 import { Input } from '../components/input'
 import { Button } from '../components/button'
-import { Checkbox } from '../components/checkbox'
+import { useSignin } from '../apis/users'
 
 export const Signin = () => {
-  const [checked, setChecked] = useState<boolean>(false)
-  const [SigninData, setSigninData] = useState({
-    id: '',
+  const [signinData, setSigninData] = useState({
+    accountId: '',
     password: '',
+    checkPassword: '',
+    nickname: '',
   })
   const [checkPassword, setCheckPassword] = useState<string>('')
+  const [step, setStep] = useState<number>(1)
+  const [passwordError, setPasswordError] = useState<boolean>(false)
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
+  const { mutate: SigninMutate } = useSignin()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -22,8 +27,21 @@ export const Signin = () => {
     }))
   }
 
-  const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckPassword(e.target.value)
+  const handleNextStep = () => {
+    if (step === 1) {
+      setStep(2)
+      setPasswordError(false)
+    } else {
+      setPasswordError(true)
+    }
+  }
+
+  const handleSignup = () => {
+    setShowSuccessModal(true)
+    SigninMutate(signinData)
+    setTimeout(() => {
+      setShowSuccessModal(false)
+    }, 2000)
   }
 
   return (
@@ -33,22 +51,37 @@ export const Signin = () => {
       <SigninContentWrap>
         <InputWrap>
           <p>welcome to YuaGa</p>
-          <Input onChange={handleChange} name="id" value={SigninData.id} label="아이디" />
-          <Input onChange={handleChange} name="password" value={SigninData.password} label="비밀번호" type="password" />
-          <ErrorMessage>영문, 숫자, 특수문자의 조합을 포함해야합니다</ErrorMessage>
-          <Input onChange={handleCheckPassword} name="repassword" value={checkPassword} label="비밀번호확인" type="password" />
-          <ErrorMessage>비밀번호가 일치하지않습니다</ErrorMessage>
-          <Button onClick={() => {}}>다음</Button>
+          {step === 1 ? (
+            <>
+              <Input onChange={handleChange} name="accountId" value={signinData.accountId} label="아이디" />
+              <Input onChange={handleChange} name="password" value={signinData.password} label="비밀번호" type="password" />
+              <ErrorMessage>영문, 특수문자의 조합하여 10자 이상이어야 합니다</ErrorMessage>
+              <Input onChange={handleChange} name="checkPassword" value={signinData.checkPassword} label="비밀번호확인" type="password" />
+              {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다</ErrorMessage>}
+              <Button onClick={handleNextStep}>다음</Button>
+            </>
+          ) : (
+            <>
+              <Input onChange={handleChange} name="nickname" value={signinData.nickname} label="닉네임" />
+              <Button onClick={handleSignup}>회원가입</Button>
+            </>
+          )}
         </InputWrap>
         <SigninImgContent src={SigninImg} />
       </SigninContentWrap>
+      {showSuccessModal && (
+        <SuccessModal>
+          <p>회원가입이 성공적으로 완료되었습니다!</p>
+        </SuccessModal>
+      )}
     </SigninContainer>
   )
 }
+
 const SigninContainer = styled.div`
-  padding-top: 74px;
+  padding: 74px 0;
   background-color: ${({ theme }) => theme.brown['03']};
-  height: 100dvh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,14 +121,14 @@ const SigninImgContent = styled.img`
   background-color: ${({ theme }) => theme.brown['01']};
 `
 
-const IdSaveWrap = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: 8px;
-`
-
-const IdSaveLabel = styled.label`
-  font-size: 10px;
+const SuccessModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: ${({ theme }) => theme.white};
+  padding: 20px;
+  border: 1px solid ${({ theme }) => theme.gray['03']};
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 `

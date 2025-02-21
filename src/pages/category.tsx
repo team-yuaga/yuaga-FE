@@ -5,60 +5,73 @@ import { Navbar } from "../components/Navbar";
 import { Categorybar } from "../components/categorybar";
 import { SearchInput } from "../components/searchInput";
 import { Card } from "../components/Card";
+import { useGetFeeds } from "../apis/feeds";
+import { Button } from "../components/button";
 
 export const Category = () => {
+  const { data: feeds } = useGetFeeds();
   const location = useLocation();
   const navigate = useNavigate();
   const [tabs, setTabs] = useState<string[]>([]);
+  const [categoryName, setCategoryName] = useState<string>('스타일링')
 
   useEffect(() => {
     switch (location.pathname) {
       case "/makeup":
         setTabs(["모두", "봄웜", "여름쿨", "가을웜", "겨울쿨"]);
+        setCategoryName('메이크업')
         break;
       case "/stylist":
         setTabs(["모두", "봄", "여름", "가을", "겨울"]);
+        setCategoryName('스타일링')
         break;
       case "/wishlist":
         setTabs(["스타일", "메이크업"]);
+        setCategoryName('게시물')
         break;
       default:
         setTabs([""]);
     }
   }, [location.pathname]);
 
+
   return (
-    <Layout>
+    <Layouts>
       <Navbar />
       <Content>
         <TopBar>
           <Categorybar tabs={tabs} />
-          <SearchInput placeholder="메이크업을 검색해보세요" name="" onChange={() => { }} value="" />
+          <SearchInput placeholder={`원하는 ${categoryName}을 검색해보세요`} name="" onChange={() => { }} value="" />
         </TopBar>
         <CardList>
-          {Array(7)
-            .fill(null)
-            .map((_, index) => (
+          {
+            feeds?.map((item) => (
               <Card
-                onClick={() => navigate(`./${index}`)}
-                key={index}
-                title="title"
-                hashtag={["tag1", "tag2", "tag3"]}
-                date="2021-09-01"
+                onClick={() => navigate(`/${location.pathname.split('/')[1]}/${item.feed_id}`)}
+                key={item.feed_id}
+                title={item.title}
+                hashtag={item.tags}
+                date={item.created_at}
                 image="https://source.unsplash.com/random"
               />
-            ))}
+            ))
+          }
         </CardList>
+        {feeds?.length === 0 && <NotHaveDataContent>
+          <Title>아직 {categoryName === "게시물" ? '즐겨찾기한' : '등록된'} 게시물이 없습니다</Title>
+          <Button onClick={() => { categoryName === "게시물" ? navigate('/stylist') : navigate('/posting') }} width="306">{categoryName === "게시물" ? "게시물 보러가기" : `${categoryName} 추가하러 가기`}</Button>
+        </NotHaveDataContent>}
       </Content>
-    </Layout>
+    </Layouts>
   );
 };
 
-const Layout = styled.div`
+const Layouts = styled.div`
   padding-top: 74px;
 `;
 
 const Content = styled.div`
+min-height: 100vh;
   background-color: ${({ theme }) => theme.brown["01"]};
   display: flex;
   flex-direction: column;
@@ -94,3 +107,17 @@ const TopBar = styled.div`
   padding: 0px 42px;
   margin-bottom: 36px;
 `;
+
+const NotHaveDataContent = styled.div`
+display:flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+  margin:auto;
+  gap: 32px;
+`
+
+const Title = styled.p`
+  font-size: 30px;
+  color: ${({ theme }) => theme.brown['04']};
+`

@@ -4,18 +4,19 @@ interface buttonProps {
   onClick: () => void
   children: React.ReactNode
   disabled?: boolean
+  width?: string
 }
 
-export const Button = ({ onClick, children, disabled }: buttonProps) => {
+export const Button = ({ onClick, children, disabled, width }: buttonProps) => {
   return (
-    <ButtonStyle onClick={onClick} disabled={disabled}>
+    <ButtonStyle width={width} onClick={onClick} disabled={disabled}>
       {children}
     </ButtonStyle>
   )
 }
 
-const ButtonStyle = styled.button`
-  width: 100%;
+const ButtonStyle = styled.button<{ width?: string }>`
+  width: ${({ width }) => width ? `${width}px` : '100%'};
   height: 60px;
   background-color: ${({ theme }) => theme.brown['04']};
   padding: 18px;

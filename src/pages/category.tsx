@@ -36,33 +36,36 @@ export const Category = () => {
 
 
   return (
-    <Layouts>
+    <>
       <Navbar />
-      <Content>
-        <TopBar>
-          <Categorybar tabs={tabs} />
-          <SearchInput placeholder={`원하는 ${categoryName}을 검색해보세요`} name="" onChange={() => { }} value="" />
-        </TopBar>
-        <CardList>
-          {
-            feeds?.map((item) => (
-              <Card
-                onClick={() => navigate(`/${location.pathname.split('/')[1]}/${item.feed_id}`)}
-                key={item.feed_id}
-                title={item.title}
-                hashtag={item.tags}
-                date={item.created_at}
-                image="https://source.unsplash.com/random"
-              />
-            ))
-          }
-        </CardList>
-        {feeds?.length === 0 && <NotHaveDataContent>
-          <Title>아직 {categoryName === "게시물" ? '즐겨찾기한' : '등록된'} 게시물이 없습니다</Title>
-          <Button onClick={() => { categoryName === "게시물" ? navigate('/stylist') : navigate('/posting') }} width="306">{categoryName === "게시물" ? "게시물 보러가기" : `${categoryName} 추가하러 가기`}</Button>
-        </NotHaveDataContent>}
-      </Content>
-    </Layouts>
+      <Layouts>
+        <Content>
+          <TopBar>
+            <Categorybar tabs={tabs} />
+            <SearchInput placeholder={`원하는 ${categoryName}을 검색해보세요`} name="" onChange={() => { }} value="" />
+          </TopBar>
+          <CardList>
+            {
+              feeds?.map((item) => (
+                <Card
+                  onClick={() => navigate(`/${location.pathname.split('/')[1]}/${item.feed_id}`)}
+                  key={item.feed_id}
+                  title={item.title}
+                  hashtag={item.tags}
+                  date={item.created_at}
+                  heart_boolean={item.like_boolean}
+                  image="https://source.unsplash.com/random"
+                />
+              ))
+            }
+          </CardList>
+          {feeds?.length === 0 && <NotHaveDataContent>
+            <Title>아직 {categoryName === "게시물" ? '즐겨찾기한' : '등록된'} 게시물이 없습니다</Title>
+            <Button onClick={() => { categoryName === "게시물" ? navigate('/stylist') : navigate('/posting') }} width="306">{categoryName === "게시물" ? "게시물 보러가기" : `${categoryName} 추가하러 가기`}</Button>
+          </NotHaveDataContent>}
+        </Content>
+      </Layouts>
+    </>
   );
 };
 

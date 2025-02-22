@@ -19,11 +19,11 @@ export const CategoryTab = ({ name, isActive, onClick }: CategoryTab) => {
 };
 
 const CategoryTabStyle = styled.div<{ isActive: boolean }>`
-display: flex;
-    justify-content: center;
-    align-items: center;
- width:109px;
- height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:109px;
+  height: 38px;
   cursor: pointer;
   font-size: 20px;
   color: ${({ theme }) => theme.brown['04']};

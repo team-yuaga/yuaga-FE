@@ -1,12 +1,20 @@
 import styled from "styled-components";
 import { Back, Heart, HeartFill, LeftArrow, RightArrow } from "../assets";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { useGetFeedDetail } from "../apis/feeds";
+import { useAddLike, useDeleteLike } from "../apis/likes";
 
 export const Detail = () => {
     const navigate = useNavigate();
+    const params = useParams();
+    const feedId = params.id || '';
     const [isLiked, setIsLiked] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const { data: feedData } = useGetFeedDetail(feedId);
+    const { mutate: addLikeMutate } = useAddLike();
+    const { mutate: deleteLikeMutate } = useDeleteLike();
+
 
     const images = [
         "https://source.unsplash.com/random/800x600",
@@ -21,7 +29,16 @@ export const Detail = () => {
     };
 
     const handleDotClick = (index: number) => setCurrentImageIndex(index);
-    const toggleLike = () => setIsLiked(prev => !prev);
+    const toggleLike = async () => {
+        const feedId = feedData?.feed_id
+        if (isLiked) {
+            await deleteLikeMutate(feedId!);
+        } else {
+            addLikeMutate(feedId!);
+        }
+        setIsLiked(prev => !prev);
+    };
+
 
     return (
         <DetailContainer>
@@ -48,14 +65,14 @@ export const Detail = () => {
                 </DetailContentWrap>
                 <DetailContentWrap>
                     <DetailContentTop>
-                        <DetailTitle>제품명</DetailTitle>
+                        <DetailTitle>{feedData?.title}</DetailTitle>
                         <HeartButton onClick={toggleLike}>
-                            <img src={isLiked ? HeartFill : Heart} alt="Like" />
+                            <img src={feedData?.like ? HeartFill : Heart} alt="Like" />
                         </HeartButton>
                     </DetailContentTop>
-                    <DetailPrice>설명</DetailPrice>
-                    <DetailDescription>태그</DetailDescription>
-                    <DetailButton>계절</DetailButton>
+                    <DetailPrice>{feedData?.content}</DetailPrice>
+                    <DetailDescription>{feedData?.tags?.map((tag, index) => <HashTag key={index}>#{tag}</HashTag>)}</DetailDescription>
+                    <DetailButton>{feedData?.season}</DetailButton>
                     <Link href="https://www.naver.com">
                         <LinkTitle>네이버로 이동</LinkTitle>
                         <LinkDescription>fjweofjoiqwjefo</LinkDescription>
@@ -170,7 +187,11 @@ const DetailContentTop = styled.div`
 
 const DetailTitle = styled.h1` font-size: 24px; `;
 const DetailPrice = styled.p` font-size: 20px; `;
-const DetailDescription = styled.p` font-size: 16px; `;
+const DetailDescription = styled.div` display:flex; gap:12px`;
+const HashTag = styled.p`
+      font-size: 20px;
+    color: ${({ theme }) => theme.gray['01']};
+`
 
 const HeartButton = styled.button`
     background: transparent;

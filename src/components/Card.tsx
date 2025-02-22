@@ -7,9 +7,10 @@ interface CardProps {
     date: string
     image: string
     onClick: () => void
+    heart_boolean: boolean
 }
 
-export const Card = ({ title, hashtag, date, image, onClick }: CardProps) => {
+export const Card = ({ title, hashtag, date, image, onClick, heart_boolean }: CardProps) => {
     return (
         <CardStyle onClick={onClick}>
             <Image src={image} alt="card image" />
@@ -21,7 +22,7 @@ export const Card = ({ title, hashtag, date, image, onClick }: CardProps) => {
                     </HashTagList>
                     <Date>{date}</Date>
                 </div>
-                <img src={Heart} alt="card image" width={38} height={38} />
+                <img src={heart_boolean ? HeartFill : Heart} alt="card image" width={38} height={38} />
             </InfoWrapper>
         </CardStyle>
     )

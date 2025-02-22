@@ -11,7 +11,8 @@ export interface FeedResponse {
     feed_id: number,
     title: string,
     tags: string[],
-    created_at: string
+    created_at: string,
+    like_boolean: boolean
 }
 
 export interface FeedDetailResponse {

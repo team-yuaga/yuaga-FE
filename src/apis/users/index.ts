@@ -1,6 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { LoginRequestType, SigninRequestType } from "./type";
+import type { LoginRequestType, SigninRequestType, UserInformationResponseType, useSubmituserInfoRequestType } from "./type";
+import { instance } from "..";
 const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 const router = "/users";
 
@@ -24,3 +25,27 @@ export const UseLogin = () => {
         }
     });
 };
+
+export const useGetInfomation = () => {
+    return useQuery<UserInformationResponseType>({
+        queryKey: ["userInfo"],
+        queryFn: async () => {
+            const { data } = await instance.get<UserInformationResponseType>(`${router}/user`);
+            return data;
+        },
+    });
+};
+
+export const useModifyNickname = () => {
+    return useMutation({
+        mutationFn: (nickname: string) => instance.patch(`${router}/nickname`, {
+            "nickname": nickname
+        })
+    })
+}
+
+export const useSubmituserInfo = () => {
+    return useMutation({
+        mutationFn: (data: useSubmituserInfoRequestType) => instance.patch(`${router}/information`, data)
+    })
+}

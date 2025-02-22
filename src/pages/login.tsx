@@ -7,6 +7,7 @@ import { Button } from '../components/button'
 import { Checkbox } from '../components/checkbox'
 import { UseLogin } from '../apis/users'
 import { cookie } from '../utils/auth'
+import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
   const [checked, setChecked] = useState<boolean>(false)
@@ -15,6 +16,7 @@ export const Login = () => {
     accountId: '',
     password: '',
   })
+  const navigate = useNavigate()
 
   useEffect(() => {
     const savedId = localStorage.getItem('id')
@@ -51,6 +53,7 @@ export const Login = () => {
     useLoginMutate(loginData, {
       onSuccess: (data) => {
         cookie.set('access_token', data.access_token)
+        navigate('/main')
       }
     }
     )

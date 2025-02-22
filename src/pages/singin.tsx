@@ -5,6 +5,7 @@ import { Back, SigninImg } from '../assets'
 import { Input } from '../components/input'
 import { Button } from '../components/button'
 import { useSignin } from '../apis/users'
+import { useNavigate } from 'react-router-dom'
 
 export const Signin = () => {
   const [signinData, setSigninData] = useState({
@@ -13,6 +14,7 @@ export const Signin = () => {
     checkPassword: '',
     nickname: '',
   })
+  const navigate = useNavigate();
   const [checkPassword, setCheckPassword] = useState<string>('')
   const [step, setStep] = useState<number>(1)
   const [passwordError, setPasswordError] = useState<boolean>(false)
@@ -38,7 +40,11 @@ export const Signin = () => {
 
   const handleSignup = () => {
     setShowSuccessModal(true)
-    SigninMutate(signinData)
+    SigninMutate(signinData, {
+      onSuccess: () => {
+        showSuccessModal === false && navigate('/login');
+      }
+    })
     setTimeout(() => {
       setShowSuccessModal(false)
     }, 2000)

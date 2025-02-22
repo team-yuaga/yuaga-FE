@@ -15,7 +15,7 @@ export const Navbar = () => {
         <Tab
           key={tab}
           name={tab}
-          isActive={location.pathname === `/${tab}`}
+          $isActive={location.pathname === `/${tab}`}
           onClick={() => navigate(`/${tab}`)}
         />
       ))}
@@ -27,4 +27,6 @@ const NavbarStyle = styled.nav`
   display: flex;
   background-color: ${({ theme }) => theme.brown?.['03']};
   width: 100%;
+  position: fixed;
+  top: 74px;
 `;

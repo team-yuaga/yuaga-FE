@@ -1,10 +1,12 @@
 import { styled } from 'styled-components'
 import { Logo } from '../assets'
+import { useNavigate } from 'react-router-dom'
 
 export const Header = () => {
+  const navigate = useNavigate()
   return (
     <HeaderContainer>
-      <LogoImg src={Logo} onClick={() => {}} />
+      <LogoImg src={Logo} onClick={() => navigate('/main')} />
       <div></div>
     </HeaderContainer>
   )

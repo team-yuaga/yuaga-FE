@@ -12,7 +12,9 @@ export interface FeedResponse {
     title: string,
     tags: string[],
     created_at: string,
-    like_boolean: boolean
+    like_boolean: boolean,
+    cate_gory: '스타일' | '메이크업',
+    season: string
 }
 
 export interface FeedDetailResponse {

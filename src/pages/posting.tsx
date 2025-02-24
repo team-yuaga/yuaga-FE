@@ -18,7 +18,10 @@ export const Posting = () => {
         title: '',
         content: '',
         tags: [],
-        season: ''
+        season: '',
+        type: '',
+        product_name: '',
+        purchase_url: '',
     });
 
     const [tagInput, setTagInput] = useState("");

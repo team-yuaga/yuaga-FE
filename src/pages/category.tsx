@@ -43,11 +43,8 @@ export const Category = () => {
   }, [location.pathname]);
 
   const filteredFeeds = feeds?.filter(item => {
-    const isWishlist = location.pathname === "/wishlist";
     const isCategoryMatch = item.cate_gory === categoryName;
     const isSeasonMatch = selectedTab === "모두" || item.season === selectedTab;
-    const isLiked = isWishlist ? item.like_boolean : true;
-
     return isCategoryMatch && isSeasonMatch;
   }) || [];
 

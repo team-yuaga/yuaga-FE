@@ -5,6 +5,9 @@ export interface FeedPostRequest {
     //file:string[]
     tags: string[];
     season: string;
+    type: string,
+    product_name: string,
+    purchase_url: string
 }
 
 export interface FeedResponse {

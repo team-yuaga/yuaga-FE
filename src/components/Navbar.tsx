@@ -7,7 +7,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const tabs = ['main', 'stylist', 'makeup', 'wishlist'];
+  const tabs = ['main', 'style', 'makeup', 'wishlist'];
 
   return (
     <NavbarStyle>

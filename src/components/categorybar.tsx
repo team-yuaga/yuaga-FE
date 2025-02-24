@@ -3,15 +3,25 @@ import styled from 'styled-components';
 import { CategoryTab } from './categoryTab';
 
 interface CategorybarProps {
-  tabs: string[]
+  tabs: string[];
+  onTabChange?: (tab: string) => void;
 }
 
-export const Categorybar = ({ tabs }: CategorybarProps) => {
-  const [activeTab, setActiveTab] = useState<string>(tabs[0] || "");
+export const Categorybar = ({ tabs, onTabChange }: CategorybarProps) => {
+  const [activeTab, setActiveTab] = useState<string>(tabs[0] || "모두"); // 기본값 설정
 
   useEffect(() => {
-    setActiveTab(tabs[0]);
+    if (tabs.length > 0) {
+      const firstTab = tabs[0] || "모두";
+      setActiveTab(firstTab);
+      onTabChange?.(firstTab);
+    }
   }, [tabs]);
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+    onTabChange?.(tab);
+  };
 
   return (
     <CategorybarStyle>
@@ -20,7 +30,7 @@ export const Categorybar = ({ tabs }: CategorybarProps) => {
           key={tab}
           name={tab}
           isActive={activeTab === tab}
-          onClick={() => setActiveTab(tab)}
+          onClick={() => handleTabClick(tab)}
         />
       ))}
     </CategorybarStyle>

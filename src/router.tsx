@@ -11,10 +11,10 @@ export const Router = () => {
                     <Route path="signin" element={<Signin />} />
                     <Route path="login" element={<Login />} />
                     <Route path="main" element={<Main />} />
-                    <Route path="stylist" element={<Category />} />
+                    <Route path="style" element={<Category />} />
                     <Route path="makeup" element={<Category />} />
                     <Route path="wishlist" element={<Category />} />
-                    <Route path="stylist/:id" element={<Detail />} />
+                    <Route path="style/:id" element={<Detail />} />
                     <Route path="makeup/:id" element={<Detail />} />
                     <Route path="wishlist/:id" element={<Detail />} />
                     <Route path="posting" element={<Posting />} />

@@ -6,7 +6,6 @@ export const Mypage = () => {
     const [searchParams] = useSearchParams();
     const path = searchParams.get("tab") || "profile";
 
-    console.log(path);
 
     return (
         <>

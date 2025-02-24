@@ -107,7 +107,7 @@ export const Posting = () => {
         }
         PostFeed(data, {
             onSuccess: () => {
-                navigate('/stylis')
+                navigate('/style')
             }
         });
     };

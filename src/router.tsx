@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login, Main, Signin, Category, Detail, Posting } from "./pages";
+import { Login, Main, Signin, Category, Detail, Posting, Mypage } from "./pages";
 import { OutLet } from "./outLet";
-import { Mypage } from "./pages/mypage";
 
 export const Router = () => {
     return (
@@ -11,12 +10,8 @@ export const Router = () => {
                     <Route path="signin" element={<Signin />} />
                     <Route path="login" element={<Login />} />
                     <Route path="main" element={<Main />} />
-                    <Route path="style" element={<Category />} />
-                    <Route path="makeup" element={<Category />} />
-                    <Route path="wishlist" element={<Category />} />
-                    <Route path="style/:id" element={<Detail />} />
-                    <Route path="makeup/:id" element={<Detail />} />
-                    <Route path="wishlist/:id" element={<Detail />} />
+                    <Route path=":category" element={<Category />} />
+                    <Route path=":category/:id" element={<Detail />} />
                     <Route path="posting" element={<Posting />} />
                     <Route path="mypage" element={<Mypage />} />
                 </Route>

@@ -5,12 +5,15 @@ import { InfomationInput } from "./infomationInput";
 import { PersonalColor } from "./personalColor";
 import { useGetInfomation, useModifyNickname, useSubmituserInfo } from "../apis/users";
 import type { PersonalColorType, UserInformationResponseType } from "../apis/users/type";
+import { cookie } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 export const ProfilePage = () => {
     const { data: userData, isLoading } = useGetInfomation();
     const { mutate: modifyNicknameMutate } = useModifyNickname();
     const { mutate: SubmitUserInfo } = useSubmituserInfo();
     const [modifyNickname, setModifyNickname] = useState<boolean>(false);
+    const navigate = useNavigate();
     const [logout, setLogout] = useState<boolean>(false);
     const [data, setData] = useState<UserInformationResponseType>({
         nick_name: "",
@@ -73,8 +76,11 @@ export const ProfilePage = () => {
                         )}
                     </Flexbox>
                 </ModifyNicknameContent>
-                <LogoutContainer onClick={() => setLogout(true)}>
-                    <Logout>로그아웃</Logout>
+                <LogoutContainer onClick={() => {
+                    cookie.remove('access_token');
+                    navigate('/login')
+                }}>
+                    <Logout >로그아웃</Logout>
                     <img src={LogoutIcon} alt="로그아웃" />
                 </LogoutContainer>
             </ProfileContainer>

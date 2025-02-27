@@ -1,39 +1,40 @@
 import { styled } from "styled-components";
 import { Logo, Profile } from "../assets";
 import { useLocation, useNavigate } from "react-router-dom";
-import { cookie } from "../utils/auth";
-import { useGetInfomation } from "../apis/users";
 import useUserName from "../stores/username";
 
 export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const access_token = cookie.get("access_token");
-  const routerList = ["main", "style", "makeup", "wishlist"];
+  const routerList = ["style", "makeup", "wishlist"];
   const { userName } = useUserName()
   const isAuthPage = ["/login", "/signin"].includes(location.pathname);
   const isCategoryPage = routerList.some((route) =>
     location.pathname.includes(route)
   );
 
+  console.log(isAuthPage, isCategoryPage)
+
+
+
   return (
     <HeaderContainer>
       <LogoImg src={Logo} onClick={() => navigate("/main")} />
       {!isAuthPage && (
         <>
-          <RouterContainer>
-            {routerList.map((item) => (
-              <p key={item} onClick={() => navigate(`/${item}`)}>
-                {item}
-              </p>
-            ))}
-          </RouterContainer>
-          {isCategoryPage && access_token && (
+          {isCategoryPage ? (
             <ProfileContainer onClick={() => navigate("/mypage?=profile")}>
               <img src={Profile} alt="Profile" width={35} height={35} />
               <p>{userName}</p>
             </ProfileContainer>
-          )}
+          ) : (
+            <RouterContainer>
+              {routerList.map((item) => (
+                <p key={item} onClick={() => navigate(`/${item}`)}>
+                  {item}
+                </p>
+              ))}
+            </RouterContainer>)}
         </>
       )}
     </HeaderContainer>

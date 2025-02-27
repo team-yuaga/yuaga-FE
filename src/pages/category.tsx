@@ -7,14 +7,20 @@ import { SearchInput } from "../components/searchInput";
 import { Card } from "../components/Card";
 import { useGetFeeds } from "../apis/feeds";
 import { Button } from "../components/button";
+import type { FeedResponse } from "../apis/feeds/type";
 
 export const Category = () => {
-  const { data: feeds } = useGetFeeds();
+  const { data } = useGetFeeds();
   const location = useLocation();
   const navigate = useNavigate();
   const [tabs, setTabs] = useState<string[]>([]);
   const [categoryName, setCategoryName] = useState<string>('스타일');
   const [selectedTab, setSelectedTab] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = ({ text }: { text: string; name: string }) => {
+    setSearchTerm(text);
+  };
 
   useEffect(() => {
     let newTabs: string[] = [];
@@ -42,19 +48,20 @@ export const Category = () => {
     setSelectedTab(newTabs[0] || "모두");
   }, [location.pathname]);
 
-  const filteredFeeds = feeds?.filter(item => {
+  const filteredFeeds = data?.filter(item => {
     const isCategoryMatch = item.cate_gory === categoryName;
     const isSeasonMatch = selectedTab === "모두" || item.season === selectedTab;
-    return isCategoryMatch && isSeasonMatch;
+    const isSearchMatch = searchTerm === "" || item.title.includes(searchTerm);
+    return isCategoryMatch && isSeasonMatch && isSearchMatch;
   }) || [];
 
-  const wishlist = feeds?.filter(item => {
+  const wishlist = data?.filter(item => {
     const isWishlist = location.pathname === "/wishlist";
     const isLike = isWishlist ? item.like_boolean : true;
-    const category = item.cate_gory === selectedTab
-    return isLike && category
-  }) || []
-
+    const isCategoryMatch = item.cate_gory === selectedTab;
+    const isSearchMatch = searchTerm === "" || item.title.includes(searchTerm);
+    return isLike && isCategoryMatch && isSearchMatch;
+  }) || [];
 
   return (
     <>
@@ -66,7 +73,7 @@ export const Category = () => {
               tabs={tabs}
               onTabChange={(tab: string) => setSelectedTab(tab)}
             />
-            <SearchInput placeholder={`원하는 ${categoryName}을 검색해보세요`} name="" onChange={() => { }} value="" />
+            <SearchInput placeholder={`원하는 ${categoryName}을 검색해보세요`} name="" onChange={handleSearchChange} value={searchTerm} />
           </TopBar>
           <CardList>
             {filteredFeeds.map(item => (
@@ -81,7 +88,7 @@ export const Category = () => {
               />
             ))}
             {
-              location.pathname === '/wishlist' && feeds?.filter(item => item.like_boolean === true && item.cate_gory === selectedTab).map((item) => (
+              location.pathname === '/wishlist' && wishlist.map((item) => (
                 <Card
                   onClick={() => navigate(`/${location.pathname.split('/')[1]}/${item.feed_id}`)}
                   key={item.feed_id}
@@ -111,6 +118,7 @@ export const Category = () => {
     </>
   );
 };
+
 
 
 const Layouts = styled.div`
